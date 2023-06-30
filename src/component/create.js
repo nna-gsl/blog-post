@@ -65,7 +65,6 @@ const Create = () => {
                         <div className="px-2">
                             <label htmlFor="description" className='inline-block text-[#39afc4] mb-1 ps-1'>Description</label>
                             <textarea onChange={handleChnage} value={formData.description} className='w-full border-[1px] border-[#39afc4] focus:border-[2px] rounded outline-none py-[8px] px-[10px]' name="description" id="desc" cols="30" rows="5"></textarea>
-
                         </div>
                     </div>
                     <div className="p-[30px] pt-0">

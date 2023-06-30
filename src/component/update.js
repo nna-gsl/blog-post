@@ -5,12 +5,23 @@ import { useDeletePostMutation, useGetPostQuery } from '../redux/apiSlice';
 import Popup from '../common/popup';
 
 const Update = () => {
-    const [showPopup, setShowPopup] = useState(false);    
+    const [showPopup, setShowPopup] = useState(false); 
+    const [editingPost, setEditingPost] = useState(null);   
     const [deletePost] = useDeletePostMutation();
     const { data } = useGetPostQuery();
-    const handleDelete = (id) => { 
+    const handleDelete = (id) => {  
         deletePost(id)
     };
+
+    const handleEdit = (post) => { 
+        setEditingPost(post);
+        setShowPopup(true);
+     };
+
+     const closeModal = () => { 
+        setShowPopup(false);
+        setEditingPost(null);
+      };
    
     return (
         <>
@@ -64,7 +75,7 @@ const Update = () => {
                                                 {tags}
                                             </td>
                                             <td className="px-6 py-4">
-                                                <span className="font-medium text-blue-600 dark:text-blue-500 hover:underline"><AiFillEdit className='ml-auto cursor-pointer text-[20px]' onClick={() => setShowPopup(true)}/></span>
+                                                <span className="font-medium text-blue-600 dark:text-blue-500 hover:underline"><AiFillEdit className='ml-auto cursor-pointer text-[20px]' onClick={() => handleEdit(item)}/></span>
                                             </td>
                                             <td className="px-6 py-4">
                                                  <span className="font-medium text-rose-600 dark:text-rose-500 hover:underline"><AiFillDelete className='mr-auto cursor-pointer text-[20px]' onClick={() => handleDelete(item.id)} /></span>
@@ -77,7 +88,7 @@ const Update = () => {
                     </table>
                 </div>
                 {
-                    showPopup &&  <Popup setShowPopup = {setShowPopup}/>
+                    showPopup &&  <Popup showPopup={showPopup}  post={editingPost} closeModal={closeModal}/>
                 }
                
             </Layout>
