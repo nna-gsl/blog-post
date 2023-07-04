@@ -2,6 +2,14 @@ import React, { useState } from 'react';
 import Layout from './layout';
 import Select from 'react-select';
 import { useCreatePostMutation } from '../redux/apiSlice';
+import { useNavigate } from 'react-router-dom';
+
+const colourOptions = [
+    { value: "Spring", label: "Spring" },
+    { value: "Summer", label: "Summer" },
+    { value: "Autumn", label: "Autumn" },
+    { value: "Winter", label: "Winter" }
+];
 
 const Create = () => {
     const initialvalue = {
@@ -15,10 +23,20 @@ const Create = () => {
     const [tags, setTags] = useState([]);
     const [createPost] = useCreatePostMutation();
 
-    const handleChnage = (e) => {
+    const navigate = useNavigate();
+
+    const handleChange = (e) => {
         let input = e.target;
         setFormData({ ...formData, [input.name]: input.value });
     };   
+
+
+    const handleSelect = (val) => {
+        console.log("🚀 ~ file: create.js:31 ~ handleSelect ~ val:", val)
+        setTags(val);
+        setFormData({ ...formData, tags: val });
+    };
+    
     const handleSubmit = (e) => {
         e.preventDefault();
         const monthNames = ["January", "February", "March", "April", "May", "June",
@@ -32,21 +50,9 @@ const Create = () => {
         createPost({ ...formData, uploadTime: fullTime });
         setFormData(initialvalue);
         setTags([]);
+        navigate("/");
     };
 
-
-    const handleSelect = (val) => {
-        setTags(val);
-        let selectedVal = val.map(obj => Object.values(obj)[0]);
-        setFormData({ ...formData, tags: selectedVal });
-    };
-
-    const colourOptions = [
-        { value: "Spring", label: "Spring" },
-        { value: "Summer", label: "Summer" },
-        { value: "Autumn", label: "Autumn" },
-        { value: "Winter", label: "Winter" }
-    ];
     return (
         <Layout className='grid place-items-center'>
             <div className='bg-white max-w-[600px] w-full shadow-md rounded'>
@@ -54,17 +60,17 @@ const Create = () => {
                     <div className='grid grid-cols-2 p-[30px] pb-0'>
                         <div className='flex flex-col px-2'>
                             <label htmlFor="author" className='text-[#39afc4] mb-1 ps-1'>Author</label>
-                            <input type="text" value={formData.author} className='border-[1px] border-[#39afc4] focus:border-[2px] rounded outline-none py-[8px] px-[10px]' onChange={handleChnage} name='author' />
+                            <input type="text" value={formData.author} className='border-[1px] border-[#39afc4] focus:border-[2px] rounded outline-none py-[8px] px-[10px]' onChange={handleChange} name='author' />
                         </div>
                         <div className='flex flex-col px-2'>
                             <label htmlFor="title" className='text-[#39afc4] mb-1 ps-1'>Title</label>
-                            <input type="text" value={formData.title} className='border-[1px] border-[#39afc4] focus:border-[2px] rounded outline-none py-[8px] px-[10px]' onChange={handleChnage} name='title' />
+                            <input type="text" value={formData.title} className='border-[1px] border-[#39afc4] focus:border-[2px] rounded outline-none py-[8px] px-[10px]' onChange={handleChange} name='title' />
                         </div>
                     </div>
                     <div className='grid grid-cols-1 p-[30px] pt-[17px]'>
                         <div className="px-2">
                             <label htmlFor="description" className='inline-block text-[#39afc4] mb-1 ps-1'>Description</label>
-                            <textarea onChange={handleChnage} value={formData.description} className='w-full border-[1px] border-[#39afc4] focus:border-[2px] rounded outline-none py-[8px] px-[10px]' name="description" id="desc" cols="30" rows="5"></textarea>
+                            <textarea onChange={handleChange} value={formData.description} className='w-full border-[1px] border-[#39afc4] focus:border-[2px] rounded outline-none py-[8px] px-[10px] text-[14px]' name="description" id="desc" cols="30" rows="5"></textarea>
                         </div>
                     </div>
                     <div className="p-[30px] pt-0">

@@ -7,13 +7,14 @@ import Popup from '../common/popup';
 const Update = () => {
     const [showPopup, setShowPopup] = useState(false); 
     const [editingPost, setEditingPost] = useState(null);   
-    const [deletePost] = useDeletePostMutation();
+    const [deletePost,{isLoading}] = useDeletePostMutation();
     const { data } = useGetPostQuery();
     const handleDelete = (id) => {  
         deletePost(id)
     };
 
     const handleEdit = (post) => { 
+        console.log("🚀 ~ file: update.js:17 ~ handleEdit ~ post:", post)
         setEditingPost(post);
         setShowPopup(true);
      };
@@ -49,8 +50,7 @@ const Update = () => {
                         </thead>
                         <tbody>
                             {
-                                data && data.map((item, index) => {
-
+                                data && data.map((item, index) => {                                    
                                     let des = item.description;
                                     let description = des.split(' ');
                                     let desArr = description.splice(0, 7);
@@ -58,8 +58,9 @@ const Update = () => {
                                     if (description.length > 7) {
                                         desStr = `${desArr.join(" ")}...`
                                     }
-                                    let tags = item.tags.join(", ");
-
+                                    let tags = [];
+                                    item.tags.map(tag =>  tags.push(tag.value) )
+                                   let tagsItem = tags.join(', ');
                                     return (
                                         <tr className="bg-white border-b dark:bg-gray-900 dark:border-gray-700" key={index}>
                                             <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -72,7 +73,7 @@ const Update = () => {
                                                 {desStr}
                                             </td>
                                             <td className="px-6 py-4">
-                                                {tags}
+                                                {tagsItem}
                                             </td>
                                             <td className="px-6 py-4">
                                                 <span className="font-medium text-blue-600 dark:text-blue-500 hover:underline"><AiFillEdit className='ml-auto cursor-pointer text-[20px]' onClick={() => handleEdit(item)}/></span>

@@ -11,7 +11,7 @@ export const apiSlice = createApi({
             return header
         },
     }),
-    tagTypes: ["UPLOAD_BLOG"],
+    tagTypes: ["BLOG_POST"],
     endpoints: (builder) => ({
         getPost: builder.query({
             query: () => {
@@ -51,8 +51,23 @@ export const apiSlice = createApi({
                 return result
             },
             invalidatesTags: ['BLOG_POST']
+        }),
+        updatePost: builder.mutation({
+            query: (params) =>{
+                const {id , ...data} = params
+                console.log("🚀 ~ file: apiSlice.js:58 ~ data:", data)
+                return {
+                    url: `/${id}`,
+                    method: 'PUT',
+                    body: data
+                }
+            },
+            invalidatesTags: ['BLOG_POST'],
+            transformResponse : (response) => {
+                return response
+            }
         })
     })
 })
 
-export const { useCreatePostMutation , useGetPostQuery, useDeletePostMutation } = apiSlice;
+export const { useCreatePostMutation , useGetPostQuery, useDeletePostMutation , useUpdatePostMutation } = apiSlice;
